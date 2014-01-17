@@ -3,7 +3,7 @@ galaxy_info:
   description: A Basic Role to install Nginx and Vhost Setup for Rails
   license: MIT
   min_ansible_version: 1.4
-  version: 1.1
+  version: 0.1
   platforms:
     - name: Debian
       versions:
