@@ -1,2 +1,111 @@
 ---
-# tasks file for nginx
+- name: install packages
+  apt:
+    pkg: "{{ item }}"
+    state: installed
+    update-cache: yes
+  with_items:
+    - nginx-full
+
+- name: copy nginx.conf file
+  template:
+    src: nginx.js
+    dest: /etc/nginx/nginx.conf
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - restart nginx
+
+- name: setup basic_auth
+  template:
+    src: htpasswd.js
+    dest: /etc/nginx/htpasswd
+    owner: root
+    group: root
+    mode: 0644
+  when: "'{{ basic_auth }}'"
+  notify:
+    - restart nginx
+
+- name: copy proxy_params configuration file
+  template:
+    src: proxy_params.js
+    dest: "/etc/nginx/{{ app }}_proxy_params"
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - restart nginx
+
+- name: copy ssl configuration file
+  template:
+    src: ssl.js
+    dest: "/etc/nginx/{{ app }}_ssl"
+    owner: root
+    group: root
+    mode: 0644
+  when: "'{{ protocol }}' == 'https'"
+  notify:
+    - restart nginx
+
+- name: create ssl dir
+  file:
+    dest: /etc/nginx/ssl
+    owner: root
+    group: root
+    mode: 0600
+    state: directory
+  when: "'{{ protocol }}' == 'https'"
+
+- name: copy ssl files
+  copy:
+    src: "{{ item }}"
+    dest: "/etc/nginx/ssl/{{ app }}{{ item[-4:] }}"
+    owner: root
+    group: root
+    mode: 0600
+  when: "'{{ protocol }}' == 'https'"
+  with_items:
+    - files/ssl.crt
+    - files/ssl.key
+  notify:
+    - restart nginx
+
+- name: copy site configuration
+  template:
+    src: vhost.js
+    dest: "/etc/nginx/sites-available/{{ app }}"
+    owner: root
+    group: root
+    mode: 0600
+  notify:
+    - restart nginx
+
+- name: override configuration files
+  template:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    owner: root
+    group: root
+    mode: "0600"
+  with_items: templates
+  notify:
+    - restart nginx
+
+- name: symlink site configuration
+  file:
+    src: "/etc/nginx/sites-available/{{ app }}"
+    dest: "/etc/nginx/sites-enabled/{{ app }}"
+    owner: root
+    group: root
+    mode: 0644
+    state: link
+  notify:
+    - restart nginx
+
+- name: ensure nginx is running
+  service:
+    name: nginx
+    state: started
+    enabled: yes
