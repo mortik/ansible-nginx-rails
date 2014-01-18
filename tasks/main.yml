@@ -20,7 +20,7 @@
 - name: setup basic_auth
   template:
     src: htpasswd.js
-    dest: /etc/nginx/htpasswd
+    dest: "/etc/nginx/{{ app }}_htpasswd"
     owner: root
     group: root
     mode: 0644
