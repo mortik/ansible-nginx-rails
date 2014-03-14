@@ -1,6 +1,7 @@
 ---
 app: test
 protocol: http
+domain: test.dev
 nginx_path: /etc/nginx
 templates: []
 basic_auth:
