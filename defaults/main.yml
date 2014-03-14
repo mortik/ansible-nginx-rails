@@ -1,5 +1,6 @@
 ---
 app: test
+app_root: /var/www
 protocol: http
 domain: test.dev
 nginx_path: /etc/nginx
