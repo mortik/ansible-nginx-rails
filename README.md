@@ -1,4 +1,6 @@
-# Ansible Nginx-Rails Role
+# Ansible Role for Rails Projects with Nginx
+
+
 
 A Basic Role to install Nginx and Setup a vhost for Rails
 
