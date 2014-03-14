@@ -1,6 +1,6 @@
 # Ansible Role for Rails Projects with Nginx
 
-
+[![Build Status](https://travis-ci.org/mortik/ansible-nginx-rails.png?branch=master)](https://travis-ci.org/mortik/ansible-nginx-rails)
 
 A Basic Role to install Nginx and Setup a vhost for Rails
 
