@@ -2,6 +2,7 @@
 app: test
 app_root: /var/www
 protocol: http
+port: 8000
 domain: test.dev
 nginx_path: /etc/nginx
 templates: []
